@@ -53,8 +53,8 @@ describe("package.json", () => {
     expect(Object.keys(pkg.bin).sort()).toEqual(["sitepulse", "sitepulse-mcp"]);
     for (const file of Object.values(pkg.bin)) expect(() => readFileSync(path.join(root, file), "utf8")).not.toThrow();
   });
-  it("has the shebang on both commands", () => {
-    for (const file of Object.values(pkg.bin)) expect(readFileSync(path.join(root, file), "utf8").startsWith("#!/usr/bin/env node")).toBe(true);
+  it("has the shebang on both commands, ending in a plain newline (a \\r there breaks the command on Linux and macOS when the package is built on Windows)", () => {
+    for (const file of Object.values(pkg.bin)) expect(readFileSync(path.join(root, file), "utf8").startsWith("#!/usr/bin/env node\n")).toBe(true);
   });
   it("has no dependency that is only needed for development", () => {
     expect(Object.keys(pkg.dependencies).sort()).toEqual(["@modelcontextprotocol/sdk", "node-html-parser", "zod"]);
