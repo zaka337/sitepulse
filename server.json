@@ -1,0 +1,36 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.zaka337/sitepulse",
+  "description": "Check a website's health: security headers, SEO, performance, accessibility and broken links.",
+  "repository": {
+    "url": "https://github.com/zaka337/sitepulse",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "sitepulse",
+      "version": "0.1.0",
+      "runtimeHint": "npx",
+      "transport": {
+        "type": "stdio"
+      },
+      "packageArguments": [
+        {
+          "type": "positional",
+          "value": "mcp"
+        }
+      ],
+      "environmentVariables": [
+        {
+          "name": "SITEPULSE_ALLOW_PRIVATE",
+          "description": "Set to 1 to let the server scan localhost and private-network addresses (for checking a site you are developing). Off by default so an assistant cannot be steered into probing your internal network.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false
+        }
+      ]
+    }
+  ]
+}

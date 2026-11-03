@@ -1,0 +1,70 @@
+{
+  "name": "sitepulse",
+  "version": "0.1.0",
+  "description": "Quick website health check from the command line, an MCP server for AI assistants, or a library: security headers, SEO basics, performance hints, accessibility basics and broken links, in a few seconds with no browser.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Zaka Ullah Waheed <zakas2379@gmail.com> (https://zaka-portfolio-two.vercel.app)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zaka337/sitepulse.git"
+  },
+  "homepage": "https://github.com/zaka337/sitepulse#readme",
+  "bugs": {
+    "url": "https://github.com/zaka337/sitepulse/issues"
+  },
+  "keywords": [
+    "website",
+    "health-check",
+    "seo",
+    "security-headers",
+    "accessibility",
+    "broken-links",
+    "qa",
+    "testing",
+    "cli",
+    "mcp",
+    "model-context-protocol"
+  ],
+  "mcpName": "io.github.zaka337/sitepulse",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "sitepulse": "dist/cli.js",
+    "sitepulse-mcp": "dist/mcp.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "server.json"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "npm run typecheck && npm run test && npm run build",
+    "prepublishOnly": "npm run check"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "node-html-parser": "^9.0.6",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^5.1.0"
+  }
+}
