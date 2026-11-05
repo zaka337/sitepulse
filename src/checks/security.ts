@@ -83,13 +83,28 @@ export const securityChecks: CheckDef[] = [
       if (!enforced) return warn("A Content-Security-Policy is only in report-only mode, so it blocks nothing yet.", "Once the reports are clean, send it as Content-Security-Policy.");
       const p = parseCsp(enforced);
       const scripts = p["script-src"] ?? p["default-src"] ?? [];
+      // Each problem comes with its own advice, so the fix names only what was actually found
+      // (it once said "remove 'unsafe-eval'" to a site that only had 'unsafe-inline').
       const problems: string[] = [];
-      if (scripts.includes("'unsafe-eval'")) problems.push("script-src allows 'unsafe-eval'");
-      if (scripts.includes("'unsafe-inline'") && !scripts.some((s) => s.startsWith("'nonce-") || s.startsWith("'sha"))) problems.push("script-src allows 'unsafe-inline' without nonces or hashes");
-      if (scripts.includes("*")) problems.push("script-src allows scripts from anywhere (*)");
-      if (!p["script-src"] && !p["default-src"]) problems.push("no script-src or default-src");
+      const fixes: string[] = [];
+      if (scripts.includes("'unsafe-eval'")) {
+        problems.push("script-src allows 'unsafe-eval'");
+        fixes.push("Remove 'unsafe-eval' from script-src.");
+      }
+      if (scripts.includes("'unsafe-inline'") && !scripts.some((s) => s.startsWith("'nonce-") || s.startsWith("'sha"))) {
+        problems.push("script-src allows 'unsafe-inline' without nonces or hashes");
+        fixes.push("Replace 'unsafe-inline' for scripts with nonces or hashes.");
+      }
+      if (scripts.includes("*")) {
+        problems.push("script-src allows scripts from anywhere (*)");
+        fixes.push("List the hosts scripts may load from instead of *.");
+      }
+      if (!p["script-src"] && !p["default-src"]) {
+        problems.push("no script-src or default-src");
+        fixes.push("Add default-src 'self' (or a script-src) so scripts are restricted.");
+      }
       return problems.length
-        ? warn("A Content-Security-Policy is set but it is weak.", "Remove 'unsafe-eval', and replace 'unsafe-inline' for scripts with nonces or hashes.", problems)
+        ? warn("A Content-Security-Policy is set but it is weak.", fixes.join(" "), problems)
         : pass("A Content-Security-Policy is set and restricts scripts.");
     },
   },

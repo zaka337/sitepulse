@@ -64,6 +64,27 @@ describe("security", () => {
   ])("sec-csp with %s -> %s", (value, expected) => {
     expect(status("sec-csp", { headers: value ? { "content-security-policy": value } : {} })).toBe(expected);
   });
+  it.each([
+    ["script-src 'self' 'unsafe-inline'", ["unsafe-inline"], ["unsafe-eval", "*"]],
+    ["script-src 'self' 'unsafe-eval'", ["unsafe-eval"], ["unsafe-inline"]],
+    ["script-src 'self' 'wasm-unsafe-eval'", [], ["unsafe-eval", "unsafe-inline"]], // WebAssembly only: a narrower permission, not a warning
+    ["script-src *", ["from"], ["unsafe-eval", "unsafe-inline"]],
+    ["img-src 'self'", ["default-src"], ["unsafe-eval", "unsafe-inline"]],
+  ])("sec-csp advice for %s names only the problems found", (value, mentioned, notMentioned) => {
+    const o = run("sec-csp", { headers: { "content-security-policy": value } });
+    if (mentioned.length === 0) {
+      expect(o.status).toBe("pass");
+      return;
+    }
+    expect(o.status).toBe("warn");
+    for (const m of mentioned) expect(o.fix, `fix should mention ${m}`).toContain(m);
+    for (const n of notMentioned) expect(o.fix, `fix should not mention ${n}`).not.toContain(n);
+  });
+  it("sec-csp: two problems give two pieces of advice", () => {
+    const o = run("sec-csp", { headers: { "content-security-policy": "script-src 'self' 'unsafe-inline' 'unsafe-eval'" } });
+    expect(o.fix).toContain("unsafe-eval");
+    expect(o.fix).toContain("unsafe-inline");
+  });
   it("sec-csp: report-only does not block anything, so it only warns", () => {
     expect(status("sec-csp", { headers: { "content-security-policy-report-only": "default-src 'self'" } })).toBe("warn");
   });

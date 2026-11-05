@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Fixed: the Content-Security-Policy advice named every possible problem, whichever one was found (a site with only `'unsafe-inline'` was told to remove `'unsafe-eval'`). Each problem now has its own advice, and only the ones found are shown.
+
 ## 0.1.0
 
 First release.
