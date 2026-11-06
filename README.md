@@ -8,8 +8,6 @@ A quick health check for any website. One command (or one tool call from an AI a
 - **Accessibility**: alt text, form labels, link and button names, heading order, pinch zoom, landmarks
 - **Links**: a sample of the page's links, checked for ones that are broken
 
-> **Status:** version 0.1.0, not on npm yet. Until it is, run it from a clone: `git clone https://github.com/zaka337/sitepulse && cd sitepulse && npm install && npm run build && node dist/cli.js example.com`. The `npx sitepulse` commands below work once it is published.
-
 It needs no browser and no account, makes a handful of requests (the page, `robots.txt`, the sitemap, a sample of links), changes nothing on the site, and finishes in a few seconds.
 
 ```text
